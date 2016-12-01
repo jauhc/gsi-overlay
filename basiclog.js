@@ -37,7 +37,7 @@ var oldlog;
 
 app.get('/overlay', (req, res) => {
     //res.set('Content-Type', 'text/html');
-    res.sendFile(__dirname + '/res/overlay.html');
+    res.sendFile(__dirname + '/overlay.html');
 });
 app.get('/', (req, res) => {
 //  res.send('leave this place');
