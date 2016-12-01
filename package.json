@@ -1,0 +1,14 @@
+{
+  "name": "gsi-obs-overlay",
+  "version": "1.0.0",
+  "description": "making a whacky overlay for obs with gsi",
+  "main": "basiclog.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "papers",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
