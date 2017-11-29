@@ -32,9 +32,6 @@ function teamName(teamcode) {
 var logString = "";
 var oldlog;
 
-
-
-
 app.get('/overlay', (req, res) => {
     //res.set('Content-Type', 'text/html');
     res.sendFile(__dirname + '/overlay.html');
