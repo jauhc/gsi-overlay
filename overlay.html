@@ -25,15 +25,13 @@ setInterval(() => {
           // console.log(payload); // debug
       }
   }
-if ( oldhealth <= 0 && oldhealth != payload.player.state.health) {
-    oldhealth = 100; }
-if (payload.player.state.health < oldhealth) {
-  var slap = oldhealth - payload.player.state.health;
-  floaty(slap);
-  
+  if ( oldhealth <= 0 && oldhealth != payload.player.state.health)
+    oldhealth = 100;
+  if (payload.player.state.health < oldhealth) {
+    var slap = oldhealth - payload.player.state.health;
+    floaty(slap);
     oldhealth = payload.player.state.health;
-}
-
+  }
 }, 30);
 
 function floaty( slapped ) {
