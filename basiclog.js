@@ -9,24 +9,19 @@ const EOL = require('os').EOL;
 var body = '';
 
 function getActiveWeapon(obj) {
-    for (let prop in obj) {
-        if (obj.hasOwnProperty(prop)) {
-            if (obj[prop].state != "holstered") {
+    for (let prop in obj)
+        if (obj.hasOwnProperty(prop))
+            if (obj[prop].state != "holstered")
                 return obj[prop];
-            }
-        }
-    }
 }
 
 function teamName(teamcode) {
-    if (teamcode == "T") {
+    if (teamcode == "T")
         return "Terrorist";
-    }
-    if (teamcode == "CT") {
+    if (teamcode == "CT")
         return "Counter-Terrorist";
-    } else {
+    else
         return "unassigned";
-    }
 }
 
 var logString = "";
