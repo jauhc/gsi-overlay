@@ -1,76 +1,92 @@
 <!DOCTYPE html>
 <html>
 <style>
-#container {
-  width: 1280px;
-  height: 720px;
-  position: relative;
-  background: black;
-}
+  #container {
+    width: 1280px;
+    height: 720px;
+    position: relative;
+    background: rgba(0, 0, 0, 0);
+  }
 </style>
+
 <body>
-<div id ="container">
-</div>
-<script>
-var payload;
-var oldhealth = 100;
-setInterval(() => {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', '//localhost/animestate', true);
-  xhr.send();
-  xhr.addEventListener("readystatechange", processRequest, false);
-  function processRequest(e) {
-      if (xhr.readyState == 4 && xhr.status == 200) {
-          payload = JSON.parse(xhr.response);
-          // console.log(payload); // debug
+  <div id="container">
+  </div>
+  <script>
+    var payload;
+    var oldhealth = 100;
+
+    //websocket rewrite
+    var ws = new WebSocket("ws://localhost:3232");
+    ws.onopen = e => { ws.send(`HELLO`) };
+    ws.onmessage = event => {
+      //console.log(event.data);
+      //console.log(event);
+      payload = JSON.parse(event.data);
+      if (oldhealth <= 0 && oldhealth != payload.player.state.health)
+        oldhealth = 100;
+      if (payload.player.state.health < oldhealth) {
+        var slap = oldhealth - payload.player.state.health;
+        floaty(slap);
+        oldhealth = payload.player.state.health;
       }
-  }
-  if ( oldhealth <= 0 && oldhealth != payload.player.state.health)
-    oldhealth = 100;
-  if (payload.player.state.health < oldhealth) {
-    var slap = oldhealth - payload.player.state.health;
-    floaty(slap);
-    oldhealth = payload.player.state.health;
-  }
-}, 30);
-
-function floaty( slapped ) {
-  var prnt = document.getElementById('container');
-  var newElement = document.createElement('div');
-  newElement.style.fontFamily = 'Comic Sans MS, cursive, sans-serif';
-  newElement.style.fontSize = 24 + 'px';
-  newElement.style.width = 50 + 'px';
-  newElement.style.height = 30 + 'px';
-  newElement.style.bottom = 40 + 'px';
-  newElement.style.left = 40 + 'px';
-  newElement.style.position = 'absolute';
-  newElement.style.backgroundColor = 'black';
-  newElement.style.backgroundColor = 'rgba(0,0,0,0.0)';
-  newElement.style.color = 'red';
-  newElement.style.opacity = 1;
-  newElement.style.textAlign = 'center';
-  newElement.style.textShadow = '0px 0px 14px #fff';
-  newElement.innerHTML = '-' + slapped;
-  prnt.appendChild(newElement);
-  setTimeout(()=>{ newElement.remove(); }, 1488);
-
-  if (oldhealth === null) { oldhealth = 100; }
-  var newhealth = oldhealth - slapped;
-  var pos = 40;
-  var fadening = 100;
-  var id = setInterval(frame, 9);
-  function frame() {
-    if (fadening == 0) {
-      newElement.remove();
-    } else {
-      pos++;
-      fadening--;
-      newElement.style.bottom = pos + 'px'; 
-      newElement.style.opacity = fadening / 100; 
+      //ws.send(`more`);
     }
-  }
-  var oldhealth = newhealth;
-}
-</script>
+
+    function getActiveWeapon(obj) {
+      for (let prop in obj)
+        if (obj.hasOwnProperty(prop))
+          if (obj[prop].state != "holstered")
+            return obj[prop];
+    }
+
+    function teamName(teamcode) {
+      if (teamcode == "T")
+        return "Terrorist";
+      if (teamcode == "CT")
+        return "Counter-Terrorist";
+      else
+        return "unassigned";
+    }
+
+    function floaty(slapped) {
+      var prnt = document.getElementById('container');
+      var newElement = document.createElement('div');
+      newElement.style.fontFamily = 'Comic Sans MS, cursive, sans-serif';
+      newElement.style.fontSize = 24 + 'px';
+      newElement.style.width = 50 + 'px';
+      newElement.style.height = 30 + 'px';
+      newElement.style.bottom = 40 + 'px';
+      newElement.style.left = 40 + 'px';
+      newElement.style.position = 'absolute';
+      newElement.style.backgroundColor = 'black';
+      newElement.style.backgroundColor = 'rgba(0,0,0,0.0)';
+      newElement.style.color = 'red';
+      newElement.style.opacity = 1;
+      newElement.style.textAlign = 'center';
+      newElement.style.textShadow = '0px 0px 14px #000';
+      newElement.innerHTML = '-' + slapped;
+      prnt.appendChild(newElement);
+      setTimeout(() => { newElement.remove(); }, 898);
+
+      if (oldhealth === null) { oldhealth = 100; }
+      var newhealth = oldhealth - slapped;
+      var pos = 40;
+      var fadening = 100;
+      var id = setInterval(frame, 9);
+      function frame() {
+        if (fadening == 0) {
+          newElement.remove();
+        } else {
+          pos++;
+          fadening--;
+          newElement.style.bottom = pos + 'px';
+          newElement.style.opacity = fadening / 100;
+        }
+      }
+      var oldhealth = newhealth;
+    }
+  </script>
 </body>
+
 </html>
